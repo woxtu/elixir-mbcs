@@ -50,95 +50,95 @@ defmodule Mbcs do
     :mbcs.stop
   end
 
-  def encode(str, encoding) do
-    encode(str, encoding, [])
+  def encode(string, to) do
+    encode(string, to, [])
   end
 
-  def encode(str, encoding, options) when is_bitstring(str) do
-    encode(String.to_char_list!(str), encoding, options)
+  def encode(string, to, options) when is_bitstring(string) do
+    encode(String.to_char_list!(string), to, options)
   end
 
-  def encode(str, encoding, options) when is_list(str) do
+  def encode(string, to, options) when is_list(string) do
     options = Dict.merge([return: :list, error: :strict], options)
 
-    case :mbcs.encode(str, encoding, options) do
+    case :mbcs.encode(string, to, options) do
       {:error, reason} -> {:error, reason}
       result -> {:ok, result}
     end
   end
 
-  def encode!(str, encoding) do
-    encode!(str, encoding, [])
+  def encode!(string, to) do
+    encode!(string, to, [])
   end
 
-  def encode!(str, encoding, options) when is_bitstring(str) do
-    encode!(String.to_char_list!(str), encoding, options)
+  def encode!(string, to, options) when is_bitstring(string) do
+    encode!(String.to_char_list!(string), to, options)
   end
 
-  def encode!(str, encoding, options) when is_list(str) do
+  def encode!(string, to, options) when is_list(string) do
     options = Dict.merge([return: :list, error: :strict], options)
 
-    case :mbcs.encode(str, encoding, options) do
+    case :mbcs.encode(string, to, options) do
       {:error, reason} -> raise inspect(reason)
       result -> result
     end
   end
 
-  def decode(str, encoding) do
-    decode(str, encoding, [])
+  def decode(string, from) do
+    decode(string, from, [])
   end
 
-  def decode(str, encoding, options) when is_bitstring(str) do
-    decode(String.to_char_list!(str), encoding, options)
+  def decode(string, from, options) when is_bitstring(string) do
+    decode(String.to_char_list!(string), from, options)
   end
 
-  def decode(str, encoding, options) when is_list(str) do
+  def decode(string, from, options) when is_list(string) do
     options = Dict.merge([return: :binary, error: :strict], options)
 
-    case :mbcs.decode(str, encoding, options) do
+    case :mbcs.decode(string, from, options) do
       {:error, reason} -> {:error, reason}
       result -> if options[:return] == :binary, do: String.from_char_list(result), else: {:ok, result}
     end
   end
 
-  def decode!(str, encoding) do
-    decode!(str, encoding, [])
+  def decode!(string, from) do
+    decode!(string, from, [])
   end
 
-  def decode!(str, encoding, options) when is_bitstring(str) do
-    decode!(String.to_char_list!(str), encoding, options)
+  def decode!(string, from, options) when is_bitstring(string) do
+    decode!(String.to_char_list!(string), from, options)
   end
 
-  def decode!(str, encoding, options) when is_list(str) do
+  def decode!(string, from, options) when is_list(string) do
     options = Dict.merge([return: :binary, error: :strict], options)
 
-    case :mbcs.decode(str, encoding, options) do
+    case :mbcs.decode(string, from, options) do
       {:error, reason} -> raise inspect(reason)
       result -> if options[:return] == :binary, do: String.from_char_list!(result), else: result
     end
   end
 
-  def from_to(str, from, to) do
-    from_to(str, from, to, [])
+  def from_to(string, from, to) do
+    from_to(string, from, to, [])
   end
 
-  def from_to(str, from, to, options) when is_list(str) do
+  def from_to(string, from, to, options) when is_list(string) do
     options = Dict.merge([return: :list, error: :strict], options)
 
-    case :mbcs.from_to(str, from, to, options) do
+    case :mbcs.from_to(string, from, to, options) do
       {:error, reason} -> {:error, reason}
       result -> {:ok, result}
     end
   end
 
-  def from_to!(str, from, to) do
-    from_to!(str, from, to, [])
+  def from_to!(string, from, to) do
+    from_to!(string, from, to, [])
   end
 
-  def from_to!(str, from, to, options) when is_list(str) do
+  def from_to!(string, from, to, options) when is_list(string) do
     options = Dict.merge([return: :list, error: :strict], options)
 
-    case :mbcs.from_to(str, from, to, options) do
+    case :mbcs.from_to(string, from, to, options) do
       {:error, reason} -> raise inspect(reason)
       result -> result
     end
