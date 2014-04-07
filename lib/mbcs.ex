@@ -1,7 +1,8 @@
 defmodule Mbcs do
   @moduledoc """
   Wrapper for erlang-mbcs.
-  See https://code.google.com/p/erlang-mbcs/
+  This module provides functions for character encoding conversion.
+  See `https://code.google.com/p/erlang-mbcs/` for detail.
 
   ## Usage
   
@@ -9,11 +10,11 @@ defmodule Mbcs do
       iex> Mbcs.start
       :ok
 
-      # Convert utf-8 to Shift_JIS
+      # Convert UTF-8 to Shift_JIS
       iex> Mbcs.encode!("九条カレン", :cp932)
-      [139, 227, 143, 240, 131, 74, 131, 140, 131, 147]
+      <<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>
 
-      # Convert Shift_JIS to utf-8, and return as a list
+      # Convert Shift_JIS to UTF-8, and return as a list
       iex> Mbcs.decode!([139, 227, 143, 240, 131, 74, 131, 140, 131, 147], :cp932, return: :list)
       [20061, 26465, 12459, 12524, 12531]
  
@@ -55,12 +56,12 @@ defmodule Mbcs do
   end
 
   def encode(string, to, options) when is_bitstring(string) do
-    encode(String.to_char_list!(string), to, options)
+    to_list = if String.valid?(string), do: &to_char_list/1, else: &bitstring_to_list/1
+
+    encode(to_list.(string), to, options)
   end
 
   def encode(string, to, options) when is_list(string) do
-    options = Dict.merge([return: :list, error: :strict], options)
-
     case :mbcs.encode(string, to, options) do
       {:error, reason} -> {:error, reason}
       result -> {:ok, result}
@@ -72,12 +73,12 @@ defmodule Mbcs do
   end
 
   def encode!(string, to, options) when is_bitstring(string) do
-    encode!(String.to_char_list!(string), to, options)
+    to_list = if String.valid?(string), do: &to_char_list/1, else: &bitstring_to_list/1
+
+    encode!(to_list.(string), to, options)
   end
 
   def encode!(string, to, options) when is_list(string) do
-    options = Dict.merge([return: :list, error: :strict], options)
-
     case :mbcs.encode(string, to, options) do
       {:error, reason} -> raise inspect(reason)
       result -> result
@@ -88,16 +89,10 @@ defmodule Mbcs do
     decode(string, from, [])
   end
 
-  def decode(string, from, options) when is_bitstring(string) do
-    decode(String.to_char_list!(string), from, options)
-  end
-
-  def decode(string, from, options) when is_list(string) do
-    options = Dict.merge([return: :binary, error: :strict], options)
-
+  def decode(string, from, options) do
     case :mbcs.decode(string, from, options) do
       {:error, reason} -> {:error, reason}
-      result -> if options[:return] == :binary, do: String.from_char_list(result), else: {:ok, result}
+      result -> if options[:return] == :list, do: {:ok, result}, else: String.from_char_list(result)
     end
   end
 
@@ -105,16 +100,10 @@ defmodule Mbcs do
     decode!(string, from, [])
   end
 
-  def decode!(string, from, options) when is_bitstring(string) do
-    decode!(String.to_char_list!(string), from, options)
-  end
-
-  def decode!(string, from, options) when is_list(string) do
-    options = Dict.merge([return: :binary, error: :strict], options)
-
+  def decode!(string, from, options) do
     case :mbcs.decode(string, from, options) do
       {:error, reason} -> raise inspect(reason)
-      result -> if options[:return] == :binary, do: String.from_char_list!(result), else: result
+      result -> if options[:return] == :list, do: result, else: String.from_char_list!(result)
     end
   end
 
@@ -122,9 +111,7 @@ defmodule Mbcs do
     from_to(string, from, to, [])
   end
 
-  def from_to(string, from, to, options) when is_list(string) do
-    options = Dict.merge([return: :list, error: :strict], options)
-
+  def from_to(string, from, to, options) do
     case :mbcs.from_to(string, from, to, options) do
       {:error, reason} -> {:error, reason}
       result -> {:ok, result}
@@ -135,9 +122,7 @@ defmodule Mbcs do
     from_to!(string, from, to, [])
   end
 
-  def from_to!(string, from, to, options) when is_list(string) do
-    options = Dict.merge([return: :list, error: :strict], options)
-
+  def from_to!(string, from, to, options) do
     case :mbcs.from_to(string, from, to, options) do
       {:error, reason} -> raise inspect(reason)
       result -> result
