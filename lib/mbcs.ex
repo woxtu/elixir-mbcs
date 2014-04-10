@@ -51,9 +51,7 @@ defmodule Mbcs do
     :mbcs.stop
   end
 
-  def encode(string, to) do
-    encode(string, to, [])
-  end
+  def encode(string, to, options \\ [])
 
   def encode(string, to, options) when is_bitstring(string) do
     to_list = if String.valid?(string), do: &to_char_list/1, else: &bitstring_to_list/1
@@ -68,9 +66,7 @@ defmodule Mbcs do
     end
   end
 
-  def encode!(string, to) do
-    encode!(string, to, [])
-  end
+  def encode!(string, to, options \\ [])
 
   def encode!(string, to, options) when is_bitstring(string) do
     to_list = if String.valid?(string), do: &to_char_list/1, else: &bitstring_to_list/1
@@ -85,44 +81,28 @@ defmodule Mbcs do
     end
   end
 
-  def decode(string, from) do
-    decode(string, from, [])
-  end
-
-  def decode(string, from, options) do
+  def decode(string, from, options \\ []) do
     case :mbcs.decode(string, from, options) do
       {:error, reason} -> {:error, reason}
       result -> if options[:return] == :list, do: {:ok, result}, else: String.from_char_list(result)
     end
   end
 
-  def decode!(string, from) do
-    decode!(string, from, [])
-  end
-
-  def decode!(string, from, options) do
+  def decode!(string, from, options \\ []) do
     case :mbcs.decode(string, from, options) do
       {:error, reason} -> raise inspect(reason)
       result -> if options[:return] == :list, do: result, else: String.from_char_list!(result)
     end
   end
 
-  def from_to(string, from, to) do
-    from_to(string, from, to, [])
-  end
-
-  def from_to(string, from, to, options) do
+  def from_to(string, from, to, options \\ []) do
     case :mbcs.from_to(string, from, to, options) do
       {:error, reason} -> {:error, reason}
       result -> {:ok, result}
     end
   end
 
-  def from_to!(string, from, to) do
-    from_to!(string, from, to, [])
-  end
-
-  def from_to!(string, from, to, options) do
+  def from_to!(string, from, to, options \\ []) do
     case :mbcs.from_to(string, from, to, options) do
       {:error, reason} -> raise inspect(reason)
       result -> result
