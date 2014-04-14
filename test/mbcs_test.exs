@@ -25,10 +25,10 @@ defmodule MbcsTest do
     assert Mbcs.encode!('九条カレン', :cp932) == <<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>
     assert Mbcs.encode!("九条カレン", :cp932) == <<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>
 
-    assert_raise RuntimeError, "{:unmapping_unicode, [unicode: 255, pos: 1]}", fn ->
+    assert_raise Mbcs.UnmappingUnicodeError, "code 255 in position 1", fn ->
       Mbcs.encode!('\xff', :cp932)
     end
-    assert_raise RuntimeError, "{:unmapping_unicode, [unicode: 255, pos: 1]}", fn ->
+    assert_raise Mbcs.UnmappingUnicodeError, fn ->
       Mbcs.encode!(<<255>>, :cp932)
     end
   end
@@ -39,11 +39,11 @@ defmodule MbcsTest do
     assert Mbcs.encode!("九条カレン", :cp932, return: :list) == [139, 227, 143, 240, 131, 74, 131, 140, 131, 147]
     assert Mbcs.encode!("九条カレン", :cp932, return: :binary) == <<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>
 
-    assert_raise RuntimeError, "{:unmapping_unicode, [unicode: 255, pos: 1]}", fn ->
+    assert_raise Mbcs.UnmappingUnicodeError, fn ->
       Mbcs.encode!('\xff', :cp932, error: :strict)
     end
     assert Mbcs.encode!('\xff', :cp932, error: :ignore) == ""
-    assert_raise RuntimeError, "{:unmapping_unicode, [unicode: 255, pos: 1]}", fn ->
+    assert_raise Mbcs.UnmappingUnicodeError, fn ->
       Mbcs.encode!(<<255>>, :cp932, error: :strict)
     end
     assert Mbcs.encode!(<<255>>, :cp932, error: :ignore) == ""
@@ -73,10 +73,10 @@ defmodule MbcsTest do
     assert Mbcs.decode!([139, 227, 143, 240, 131, 74, 131, 140, 131, 147], :cp932) == "九条カレン"
     assert Mbcs.decode!(<<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>, :cp932) == "九条カレン"
 
-    assert_raise RuntimeError, "{:undefined_character, [character: 255, pos: 1]}", fn ->
+    assert_raise Mbcs.UndefinedCharacterError, fn ->
       Mbcs.decode!([255], :cp932)
     end
-    assert_raise RuntimeError, "{:undefined_character, [character: 255, pos: 1]}", fn ->
+    assert_raise Mbcs.UndefinedCharacterError, fn ->
       Mbcs.decode!(<<255>>, :cp932)
     end
   end
@@ -87,11 +87,11 @@ defmodule MbcsTest do
     assert Mbcs.decode!(<<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>, :cp932, return: :list) == '九条カレン'
     assert Mbcs.decode!(<<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>, :cp932, return: :binary) == "九条カレン"
 
-    assert_raise RuntimeError, "{:undefined_character, [character: 255, pos: 1]}", fn ->
+    assert_raise Mbcs.UndefinedCharacterError, fn ->
       Mbcs.decode!([255], :cp932, error: :strict)
     end
     assert Mbcs.decode!([255], :cp932, error: :ignore) == ""
-    assert_raise RuntimeError, "{:undefined_character, [character: 255, pos: 1]}", fn ->
+    assert_raise Mbcs.UndefinedCharacterError, fn ->
       Mbcs.decode!(<<255>>, :cp932, error: :strict)
     end
     assert Mbcs.decode!(<<255>>, :cp932, error: :ignore) == ""
@@ -145,10 +145,10 @@ defmodule MbcsTest do
     assert Mbcs.from_to!(<<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>, :cp932, :utf8)
       == <<228, 185, 157, 230, 157, 161, 227, 130, 171, 227, 131, 172, 227, 131, 179>>
 
-    assert_raise RuntimeError, "{:undefined_character, [character: 255, pos: 1]}", fn ->
+    assert_raise Mbcs.UndefinedCharacterError, fn ->
       Mbcs.from_to!('\xff', :cp932, :utf8)
     end
-    assert_raise RuntimeError, "{:undefined_character, [character: 255, pos: 1]}", fn ->
+    assert_raise Mbcs.UndefinedCharacterError, fn ->
       Mbcs.from_to!(<<255>>, :cp932, :utf8)
     end
   end
@@ -171,13 +171,23 @@ defmodule MbcsTest do
     assert Mbcs.from_to!(<<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>, :cp932, :utf8, return: :binary)
       == <<228, 185, 157, 230, 157, 161, 227, 130, 171, 227, 131, 172, 227, 131, 179>>
 
-    assert_raise RuntimeError, "{:undefined_character, [character: 255, pos: 1]}", fn ->
+    assert_raise Mbcs.UndefinedCharacterError, fn ->
       Mbcs.from_to!('\xff', :cp932, :utf8, error: :strict)
     end
     assert Mbcs.from_to!('\xff', :cp932, :utf8, error: :ignore) == ""
-    assert_raise RuntimeError, "{:undefined_character, [character: 255, pos: 1]}", fn ->
+    assert_raise Mbcs.UndefinedCharacterError, fn ->
       Mbcs.from_to!(<<255>>, :cp932, :utf8, error: :strict)
     end
     assert Mbcs.from_to!(<<255>>, :cp932, :utf8, error: :ignore) == ""
+  end
+
+  test "exceptions" do
+    assert_raise Mbcs.UnknownOptionError, fn ->
+      Mbcs.from_to!("", :utf8, :cp932, foo: :bar)
+    end
+
+    assert_raise Mbcs.UnknownEncodingError, fn ->
+      Mbcs.from_to!("", :foo, :cp932)
+    end
   end
 end

@@ -76,7 +76,7 @@ defmodule Mbcs do
 
   def encode!(string, to, options) when is_list(string) do
     case :mbcs.encode(string, to, options) do
-      {:error, reason} -> raise inspect(reason)
+      {:error, reason} -> raise to_error(reason)
       result -> result
     end
   end
@@ -90,7 +90,7 @@ defmodule Mbcs do
 
   def decode!(string, from, options \\ []) do
     case :mbcs.decode(string, from, options) do
-      {:error, reason} -> raise inspect(reason)
+      {:error, reason} -> raise to_error(reason)
       result -> if options[:return] == :list, do: result, else: String.from_char_list!(result)
     end
   end
@@ -104,8 +104,54 @@ defmodule Mbcs do
 
   def from_to!(string, from, to, options \\ []) do
     case :mbcs.from_to(string, from, to, options) do
-      {:error, reason} -> raise inspect(reason)
+      {:error, reason} -> raise to_error(reason)
       result -> result
     end
+  end
+
+  defexception UnknownOptionError, message: nil
+  defexception UnknownEncodingError, message: nil
+  defexception UnmappingUnicodeError, message: nil
+  defexception IllegalListError, message: nil
+  defexception UndefinedCharacterError, message: nil
+  defexception UnmappingCharacterError, message: nil
+  defexception IncompleteMultibyteSequenceError, message: nil
+  defexception UnmappingMultibyteCharacterError, message: nil
+  defexception UnknownError, message: nil
+
+  defp to_error({:unknown_option, [option: option]}) do
+    UnknownOptionError.new(message: "option #{inspect option}")
+  end
+
+  defp to_error({:unkonwn_encoding, [encoding: encoding]}) do
+    UnknownEncodingError.new(message: "encoding #{inspect encoding}")
+  end
+
+  defp to_error({:unmapping_unicode, [unicode: code, pos: pos]}) do
+    UnmappingUnicodeError.new(message: "code #{code} in position #{pos}")
+  end
+
+  defp to_error({:illegal_list, [list: list, line: line]}) do
+    IllegalListError.new(message: "list #{inspect list} at line #{line}")
+  end
+
+  defp to_error({:undefined_character, [character: character, pos: pos]}) do
+    UndefinedCharacterError.new(message: "character #{character} in position #{pos}")
+  end
+
+  defp to_error({:unmapping_character, [character: character, pos: pos]}) do
+    UnmappingCharacterError.new(message: "character #{character} in position #{pos}")
+  end
+
+  defp to_error({:incomplete_multibyte_sequence, [leadbyte: leadbyte, pos: pos]}) do
+    IncompleteMultibyteSequenceError.new(message: "leadbyte #{leadbyte} in position #{pos}")
+  end
+
+  defp to_error({:unmapping_multibyte_character, [multibyte_character: character, pos: pos]}) do
+    UnmappingMultibyteCharacterError.new(message: "character #{character} in position #{pos}")
+  end
+
+  defp to_error(reason) do
+    UnknownError.new(message: inspect reason)
   end
 end
