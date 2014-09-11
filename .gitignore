@@ -1,11 +1,11 @@
-# Created by http://www.gitignore.io
+# Created by https://www.gitignore.io
 
 ### OSX ###
 .DS_Store
 .AppleDouble
 .LSOverride
 
-# Icon must ends with two \r.
+# Icon must end with two \r
 Icon
 
 # Thumbnails
@@ -14,6 +14,13 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
 
 
 ### vim ###
@@ -26,9 +33,12 @@ Session.vim
 
 
 ### Elixir ###
-/ebin
+/_build
 /deps
-/erl_crash.dump
+erl_crash.dump
+*.ez
+mix.lock
+
 
 ### Erlang ###
 .eunit
@@ -37,5 +47,8 @@ deps
 *.beam
 *.plt
 erl_crash.dump
+ebin
+rel/example_project
+.concrete/DEV_MODE
+.rebar
 
-/_build

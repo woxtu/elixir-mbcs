@@ -3,8 +3,8 @@ defmodule Mbcs.Mixfile do
 
   def project do
     [ app: :"elixir-mbcs",
-      version: "0.0.1",
-      elixir: "~> 0.15.1",
+      version: "0.1.1",
+      elixir: ">= 0.15.0",
       deps: deps ]
   end
 
