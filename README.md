@@ -1,7 +1,20 @@
 # elixir-mbcs
 
+[![Travis](https://img.shields.io/travis/woxtu/elixir-mbcs.svg?style=flat-square)](https://travis-ci.org/woxtu/elixir-mbcs)
+[![Hex.pm](https://img.shields.io/hexpm/v/elixir_mbcs.svg?style=flat-square)](https://hex.pm/packages/elixir_mbcs)
+
 Wrapper for [erlang-mbcs](https://code.google.com/p/erlang-mbcs/).
 This module provides functions for character encoding conversion.
+
+## Install
+
+Adding the following to the mix.exs in your project:
+
+```elixir
+def deps do
+  [{:elixir_mbcs, "~> 0.1.1"}]
+end
+```
 
 ## Usage
 
