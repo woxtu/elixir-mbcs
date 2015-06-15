@@ -2,9 +2,15 @@ defmodule Mbcs.Mixfile do
   use Mix.Project
 
   def project do
-    [ app: :"elixir-mbcs",
+    [ app: :elixir_mbcs,
       version: "0.1.1",
-      elixir: ">= 0.15.0",
+      elixir: "~> 1.0",
+      description: "Convert the character encoding",
+      package: [
+        contributors: ["woxtu"],
+        licenses: ["MIT"],
+        links: %{"GitHub" => "https://github.com/woxtu/elixir-mbcs"}
+      ],
       deps: deps ]
   end
 

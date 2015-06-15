@@ -1,8 +1,7 @@
 # elixir-mbcs
 
-Wrapper for erlang-mbcs.
+Wrapper for [erlang-mbcs](https://code.google.com/p/erlang-mbcs/).
 This module provides functions for character encoding conversion.
-See [https://code.google.com/p/erlang-mbcs/](https://code.google.com/p/erlang-mbcs/) for detail.
 
 ## Usage
 
@@ -31,7 +30,7 @@ iex> Mbcs.decode!([139, 227, 143, 240, 131, 74, 131, 140, 131, 147], :cp932, ret
 * cp1026, cp1250, cp1251, cp1252, cp1253, cp1254, cp1255, cp1256, cp1257, cp1258
 * cp10000, cp10006, cp10007, cp10029, cp10079, cp10081
 * utf8, utf16, utf16le, utf16be, utf32, utf32le, utf32be
- 
+
 ## Options
 
 * return: list, binary
@@ -40,6 +39,7 @@ iex> Mbcs.decode!([139, 227, 143, 240, 131, 74, 131, 140, 131, 147], :cp932, ret
 * bom: `true`, `false`
 
 ## License
-Copyright (c) 2014 woxtu
 
-Licensed under the Boost Software License, Version 1.0.
+Copyright (c) 2015 woxtu
+
+Licensed under the MIT license.
