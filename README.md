@@ -12,7 +12,7 @@ Adding the following to the mix.exs in your project:
 
 ```elixir
 def deps do
-  [{:elixir_mbcs, "~> 0.1.1"}]
+  [{:elixir_mbcs, "~> 0.1.2"}]
 end
 ```
 
