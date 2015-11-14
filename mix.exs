@@ -19,6 +19,6 @@ defmodule Mbcs.Mixfile do
   end
 
   defp deps do
-    [{:mbcs, github: "rkfg/erlang-mbcs"}]
+    [{:mbcs, github: "nekova/erlang-mbcs"}]
   end
 end
