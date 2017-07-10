@@ -11,7 +11,8 @@ defmodule Mbcs.Mixfile do
         licenses: ["MIT"],
         links: %{"GitHub" => "https://github.com/woxtu/elixir-mbcs"}
       ],
-      deps: deps ]
+      deps: deps()
+    ]
   end
 
   def application do
