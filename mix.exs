@@ -3,7 +3,7 @@ defmodule Mbcs.Mixfile do
 
   def project do
     [ app: :elixir_mbcs,
-      version: "0.1.2",
+      version: "0.1.3",
       elixir: "~> 1.0",
       description: "Convert the character encoding",
       package: [
