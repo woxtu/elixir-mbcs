@@ -5,7 +5,6 @@ defmodule MbcsTest do
     assert Mbcs.encode('九条カレン', :cp932) == {:ok, <<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>}
     assert Mbcs.encode("九条カレン", :cp932) == {:ok, <<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>}
 
-    assert Mbcs.encode('\xff', :cp932) == {:error, {:unmapping_unicode, [unicode: 255, pos: 1]}}
     assert Mbcs.encode(<<255>>, :cp932) == {:error, {:unmapping_unicode, [unicode: 255, pos: 1]}}
   end
 
@@ -15,8 +14,6 @@ defmodule MbcsTest do
     assert Mbcs.encode("九条カレン", :cp932, return: :list) == {:ok, [139, 227, 143, 240, 131, 74, 131, 140, 131, 147]}
     assert Mbcs.encode("九条カレン", :cp932, return: :binary) == {:ok, <<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>}
 
-    assert Mbcs.encode('\xff', :cp932, error: :strict) == {:error, {:unmapping_unicode, [unicode: 255, pos: 1]}}
-    assert Mbcs.encode('\xff', :cp932, error: :ignore) == {:ok, ""}
     assert Mbcs.encode(<<255>>, :cp932, error: :strict) == {:error, {:unmapping_unicode, [unicode: 255, pos: 1]}}
     assert Mbcs.encode(<<255>>, :cp932, error: :ignore) == {:ok, ""}
   end
@@ -25,9 +22,6 @@ defmodule MbcsTest do
     assert Mbcs.encode!('九条カレン', :cp932) == <<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>
     assert Mbcs.encode!("九条カレン", :cp932) == <<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>
 
-    assert_raise Mbcs.UnmappingUnicodeError, "code 255 in position 1", fn ->
-      Mbcs.encode!('\xff', :cp932)
-    end
     assert_raise Mbcs.UnmappingUnicodeError, fn ->
       Mbcs.encode!(<<255>>, :cp932)
     end
@@ -39,10 +33,6 @@ defmodule MbcsTest do
     assert Mbcs.encode!("九条カレン", :cp932, return: :list) == [139, 227, 143, 240, 131, 74, 131, 140, 131, 147]
     assert Mbcs.encode!("九条カレン", :cp932, return: :binary) == <<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>
 
-    assert_raise Mbcs.UnmappingUnicodeError, fn ->
-      Mbcs.encode!('\xff', :cp932, error: :strict)
-    end
-    assert Mbcs.encode!('\xff', :cp932, error: :ignore) == ""
     assert_raise Mbcs.UnmappingUnicodeError, fn ->
       Mbcs.encode!(<<255>>, :cp932, error: :strict)
     end
@@ -107,7 +97,6 @@ defmodule MbcsTest do
     assert Mbcs.from_to(<<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>, :cp932, :utf8)
       == {:ok, <<228, 185, 157, 230, 157, 161, 227, 130, 171, 227, 131, 172, 227, 131, 179>>}
 
-    assert Mbcs.from_to('\xff', :cp932, :utf8) == {:error, {:undefined_character, [character: 255, pos: 1]}}
     assert Mbcs.from_to(<<255>>, :cp932, :utf8) == {:error, {:undefined_character, [character: 255, pos: 1]}}
   end
 
@@ -129,8 +118,6 @@ defmodule MbcsTest do
     assert Mbcs.from_to(<<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>, :cp932, :utf8, return: :binary)
       == {:ok, <<228, 185, 157, 230, 157, 161, 227, 130, 171, 227, 131, 172, 227, 131, 179>>}
 
-    assert Mbcs.from_to('\xff', :cp932, :utf8, error: :strict) == {:error, {:undefined_character, [character: 255, pos: 1]}}
-    assert Mbcs.from_to('\xff', :cp932, :utf8, error: :ignore) == {:ok, ""}
     assert Mbcs.from_to(<<255>>, :cp932, :utf8, error: :strict) == {:error, {:undefined_character, [character: 255, pos: 1]}}
     assert Mbcs.from_to(<<255>>, :cp932, :utf8, error: :ignore) == {:ok, ""}
   end
@@ -145,9 +132,6 @@ defmodule MbcsTest do
     assert Mbcs.from_to!(<<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>, :cp932, :utf8)
       == <<228, 185, 157, 230, 157, 161, 227, 130, 171, 227, 131, 172, 227, 131, 179>>
 
-    assert_raise Mbcs.UndefinedCharacterError, fn ->
-      Mbcs.from_to!('\xff', :cp932, :utf8)
-    end
     assert_raise Mbcs.UndefinedCharacterError, fn ->
       Mbcs.from_to!(<<255>>, :cp932, :utf8)
     end
@@ -171,10 +155,6 @@ defmodule MbcsTest do
     assert Mbcs.from_to!(<<139, 227, 143, 240, 131, 74, 131, 140, 131, 147>>, :cp932, :utf8, return: :binary)
       == <<228, 185, 157, 230, 157, 161, 227, 130, 171, 227, 131, 172, 227, 131, 179>>
 
-    assert_raise Mbcs.UndefinedCharacterError, fn ->
-      Mbcs.from_to!('\xff', :cp932, :utf8, error: :strict)
-    end
-    assert Mbcs.from_to!('\xff', :cp932, :utf8, error: :ignore) == ""
     assert_raise Mbcs.UndefinedCharacterError, fn ->
       Mbcs.from_to!(<<255>>, :cp932, :utf8, error: :strict)
     end
