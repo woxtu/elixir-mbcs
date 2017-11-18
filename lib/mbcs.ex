@@ -5,7 +5,7 @@ defmodule Mbcs do
   See `https://code.google.com/p/erlang-mbcs/` for detail.
 
   ## Usage
-  
+
       # Start mbcs server
       iex> Mbcs.start
       :ok
@@ -17,7 +17,7 @@ defmodule Mbcs do
       # Convert Shift_JIS to UTF-8, and return as a list
       iex> Mbcs.decode!([139, 227, 143, 240, 131, 74, 131, 140, 131, 147], :cp932, return: :list)
       [20061, 26465, 12459, 12524, 12531]
- 
+
   ## Support encodings
 
   * `:cp037`
@@ -29,7 +29,7 @@ defmodule Mbcs do
   * `:cp1026`, `:cp1250`, `:cp1251`, `:cp1252`, `:cp1253`, `:cp1254`, `:cp1255`, `:cp1256`, `:cp1257`, `:cp1258`
   * `:cp10000`, `:cp10006`, `:cp10007`, `:cp10029`, `:cp10079`, `:cp10081`
   * `:utf8`, `:utf16`, `:utf16le`, `:utf16be`, `:utf32`, `:utf32le`, `:utf32be`
- 
+
   ## Options
 
   * return: `:list`, `:binary`
@@ -46,7 +46,7 @@ defmodule Mbcs do
   def start do
     :mbcs.start
   end
- 
+
   def stop do
     :mbcs.stop
   end
@@ -54,7 +54,7 @@ defmodule Mbcs do
   def encode(string, to, options \\ [])
 
   def encode(string, to, options) when is_bitstring(string) do
-    to_list = if String.valid?(string), do: &to_char_list/1, else: &:erlang.bitstring_to_list/1
+    to_list = if String.valid?(string), do: &to_charlist/1, else: &:erlang.bitstring_to_list/1
 
     encode(to_list.(string), to, options)
   end
@@ -69,7 +69,7 @@ defmodule Mbcs do
   def encode!(string, to, options \\ [])
 
   def encode!(string, to, options) when is_bitstring(string) do
-    to_list = if String.valid?(string), do: &to_char_list/1, else: &:erlang.bitstring_to_list/1
+    to_list = if String.valid?(string), do: &to_charlist/1, else: &:erlang.bitstring_to_list/1
 
     encode!(to_list.(string), to, options)
   end
