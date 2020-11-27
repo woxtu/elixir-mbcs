@@ -1,7 +1,5 @@
 # elixir-mbcs
 
-[![Travis](https://img.shields.io/travis/woxtu/elixir-mbcs.svg?style=flat-square)](https://travis-ci.org/woxtu/elixir-mbcs)
-
 Wrapper for [erlang-mbcs](https://code.google.com/p/erlang-mbcs/).
 This module provides functions for character encoding conversion.
 
